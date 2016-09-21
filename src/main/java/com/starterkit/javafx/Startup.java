@@ -37,13 +37,13 @@ public class Startup extends Application {
 		}
 		
 		// primaryStage.setTitle("%label.formTitle");
-		primaryStage.setTitle("Search User Profiles");
+		primaryStage.setTitle("Image Viewer");
 
 		/*
 		 * Load screen from FXML file with specific language bundle (derived
 		 * from default locale).
 		 */
-		Parent root = FXMLLoader.load(getClass().getResource("/com/starterkit/javafx/view/imageViewer.fxml"), //
+		Parent root = FXMLLoader.load(getClass().getResource("/com/starterkit/javafx/view/imageViewerMainWindow.fxml"), //
 				ResourceBundle.getBundle("com/starterkit/javafx/bundle/base"));
 
 		Scene scene = new Scene(root);

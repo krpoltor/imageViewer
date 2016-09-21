@@ -1,6 +1,7 @@
 package com.starterkit.javafx.dataprovider;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.starterkit.javafx.dataprovider.impl.DataProviderImpl;
 
@@ -12,6 +13,6 @@ public interface DataProvider {
 	DataProvider INSTANCE = new DataProviderImpl();
 	
 	
-	File[] loadPictures(String path);
+	ArrayList<File> loadPictures(String path);
 
 }

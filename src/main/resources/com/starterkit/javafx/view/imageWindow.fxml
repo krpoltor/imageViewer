@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -14,22 +18,51 @@
 	prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.starterkit.javafx.controller.ImageWindowController">
 	<children>
-		<Button fx:id="previousButton" layoutX="14.0" layoutY="14.0"
-			mnemonicParsing="false" onAction="#previousButtonAction" prefHeight="60.0"
-			prefWidth="104.0" text="%button.previous" />
-		<Button fx:id="nextButton" layoutX="143.0" layoutY="14.0"
-			mnemonicParsing="false" onAction="#nextButtonAction" prefHeight="60.0"
-			prefWidth="60.0" text="%button.next" />
-		<Button fx:id="editButton" layoutX="222.0" layoutY="14.0"
-			mnemonicParsing="false" onAction="#editButtonAction" prefHeight="60.0"
-			prefWidth="60.0" text="%button.edit" />
+		<GridPane layoutX="14.0" layoutY="14.0" prefHeight="60.0"
+			prefWidth="300.0">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+			</rowConstraints>
+			<children>
+				<Button fx:id="nextButton" defaultButton="true"
+					mnemonicParsing="false" onAction="#nextButtonAction" prefHeight="60.0"
+					prefWidth="100.0" text="%button.next" GridPane.columnIndex="1">
+					<padding>
+						<Insets right="20.0" />
+					</padding>
+				</Button>
+				<Button fx:id="previousButton" mnemonicParsing="false"
+					onAction="#previousButtonAction" prefHeight="60.0" prefWidth="100.0"
+					text="%button.previous">
+					<padding>
+						<Insets right="10.0" />
+					</padding>
+				</Button>
+				<Button fx:id="editButton" mnemonicParsing="false"
+					onAction="#editButtonAction" prefHeight="60.0" prefWidth="100.0"
+					text="%button.edit" GridPane.columnIndex="2">
+					<padding>
+						<Insets right="30.0" />
+					</padding>
+				</Button>
+			</children>
+		</GridPane>
 		<ScrollPane layoutX="13.0" layoutY="81.0">
 			<content>
 				<ImageView fx:id="mainImageView" fitHeight="484.0"
 					fitWidth="774.0" pickOnBounds="true" preserveRatio="true" />
 			</content>
 		</ScrollPane>
-		<GridPane layoutX="735.0" layoutY="579.0" prefHeight="14.0"
+		<GridPane layoutX="723.0" layoutY="572.0" prefHeight="14.0"
 			prefWidth="51.0">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
@@ -52,6 +85,32 @@
 				<Label text="/" GridPane.columnIndex="1" />
 				<Label fx:id="picturesQuantityLabel" text="Label"
 					GridPane.columnIndex="2" />
+			</children>
+		</GridPane>
+		<GridPane layoutX="507.0" layoutY="14.0" prefHeight="60.0"
+			prefWidth="279.0">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+			</rowConstraints>
+			<children>
+				<ToggleButton fx:id="slideshowButton" mnemonicParsing="false"
+					prefHeight="31.0" prefWidth="173.0"
+					text="%button.slideshow" />
+				<MenuButton fx:id="slideshowIntervalButton"
+					mnemonicParsing="false" prefHeight="31.0" prefWidth="127.0"
+					text="%button.interval" GridPane.columnIndex="1">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Action 1" />
+						<MenuItem mnemonicParsing="false" text="Action 2" />
+					</items>
+				</MenuButton>
 			</children>
 		</GridPane>
 	</children>

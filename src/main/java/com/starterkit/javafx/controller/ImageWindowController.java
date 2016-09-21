@@ -5,17 +5,26 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.starterkit.javafx.context.Context;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class ImageWindowController {
 
@@ -33,6 +42,10 @@ public class ImageWindowController {
 	private Label currentPositionLabel;
 	@FXML
 	private Label picturesQuantityLabel;
+	@FXML
+	private ToggleButton slideshowButton;
+	@FXML
+	private MenuButton slideshowIntervalButton;
 
 	private Context model = Context.getInstance();
 
@@ -52,17 +65,42 @@ public class ImageWindowController {
 	private void initialize() {
 		LOG.debug("initialize(): " + this.getClass().getName());
 
-		
 		for (int i = 0; i < listOfPictures.size(); i++) {
-			if(listOfPictures.get(i).getAbsolutePath().equals(model.getCurrentPicturePath())){
+			if (listOfPictures.get(i).getAbsolutePath().equals(model.getCurrentPicturePath())) {
 				position = i;
 			}
+
+			initilizeToggleButton();
+			
 		}
-		
+
 		picturesQuantityLabel.setText(String.valueOf(getListOfPictures().size()));
-		Integer pos = position+1;
+		Integer pos = position + 1;
 		currentPositionLabel.setText(pos.toString());
 		showImage();
+	}
+
+	private void initilizeToggleButton() {
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2500), ae -> slideshow()));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		ToggleGroup group = new ToggleGroup();
+
+		slideshowButton.setToggleGroup(group);
+
+		group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
+				if (new_toggle == null) {
+					timeline.stop();
+				} else {
+					timeline.play();
+				}
+				;
+			}
+		});
+	}
+
+	private void slideshow() {
+		nextButtonAction();
 	}
 
 	private void showImage() {

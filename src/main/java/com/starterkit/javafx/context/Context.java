@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Context {
-    private final static Context instance = new Context();
-
-    public static Context getInstance() {
-        return instance;
-    }
-
+	private final static Context instance = new Context();
 	private ArrayList<File> listOfPictures;
-	
+	private String currentPicturePath;
+
+	public static Context getInstance() {
+		return instance;
+	}
+
 	public ArrayList<File> getListOfPictures() {
 		return listOfPictures;
 	}
@@ -19,8 +19,6 @@ public class Context {
 	public void setListOfPictures(ArrayList<File> listOfPictures) {
 		this.listOfPictures = listOfPictures;
 	}
-
-	private String currentPicturePath;
 
 	public String getCurrentPicturePath() {
 		return currentPicturePath;

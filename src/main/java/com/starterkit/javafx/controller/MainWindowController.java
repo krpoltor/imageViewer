@@ -61,6 +61,9 @@ public class MainWindowController {
 	@FXML
 	public void openButtonAction(ActionEvent event) {
 		LOG.debug("'Open' button clicked!");
+		if (model.getListOfPictures() != null) {
+			model.clearListOfPictures();
+		}
 		Runnable backgroundTask = new Runnable() {
 
 			/**
@@ -69,7 +72,7 @@ public class MainWindowController {
 			@Override
 			public void run() {
 				LOG.debug("backgroundTask.run() called");
-
+	
 				/*
 				 * Ask for permission.
 				 */
@@ -95,15 +98,12 @@ public class MainWindowController {
 						if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
 							LOG.debug("getCurrentDirectory(): " + chooser.getCurrentDirectory());
-							LOG.debug("getSelectedFile() : " + chooser.getSelectedFile());
+							LOG.debug("Selected directory : " + chooser.getSelectedFile());
 
 							model.setListOfPictures(dataprovider.loadPictures(chooser.getSelectedFile().toString()));
 
 							ArrayList<File> pictures = model.getListOfPictures();
 
-							/*
-							 * Copy the result to model.
-							 */
 							for (final File file : pictures) {
 								ImageView imageView;
 								imageView = createImageView(file, event);

@@ -13,17 +13,26 @@ import com.starterkit.javafx.context.Context;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
 
 public class ImageWindowController {
@@ -46,10 +55,16 @@ public class ImageWindowController {
 	private ToggleButton slideshowButton;
 	@FXML
 	private MenuButton slideshowIntervalButton;
+	@FXML
+	private ScrollPane scrollPane;
+
+	AnimatedZoomOperator zoomOperator = new AnimatedZoomOperator();
 
 	private Context model = Context.getInstance();
 
 	private Integer position = new Integer(0);
+
+	final DoubleProperty zoomProperty = new SimpleDoubleProperty(200);
 
 	private ArrayList<File> listOfPictures = model.getListOfPictures();
 
@@ -69,15 +84,56 @@ public class ImageWindowController {
 			if (listOfPictures.get(i).getAbsolutePath().equals(model.getCurrentPicturePath())) {
 				position = i;
 			}
-
-			initilizeToggleButton();
-			
 		}
+		initilizeToggleButton();
+		initializeZoom();
 
 		picturesQuantityLabel.setText(String.valueOf(getListOfPictures().size()));
 		Integer pos = position + 1;
 		currentPositionLabel.setText(pos.toString());
 		showImage();
+	}
+
+	private void initializeZoom() {
+		// zoomProperty.addListener(new InvalidationListener() {
+		// @Override
+		// public void invalidated(Observable arg0) {
+		// mainImageView.setFitWidth(zoomProperty.get() * 4);
+		// mainImageView.setFitHeight(zoomProperty.get() * 3);
+		// }
+		// });
+		//
+		// scrollPane.addEventFilter(ScrollEvent.ANY, new
+		// EventHandler<ScrollEvent>() {
+		// @Override
+		// public void handle(ScrollEvent event) {
+		// if (event.getDeltaY() > 0) {
+		// zoomProperty.set(zoomProperty.get() * 1.1);
+		// } else if (event.getDeltaY() < 0) {
+		// zoomProperty.set(zoomProperty.get() / 1.1);
+		// }
+		// }
+		// });
+		//
+		// mainImageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		// @Override
+		// public void handle(KeyEvent ke) {
+		// if (ke.getCode().equals(KeyCode.RIGHT)) {
+		// mainImageView.setX(4);
+		// }
+		// }
+		// });
+		scrollPane.setOnScroll(new EventHandler<ScrollEvent>() {
+			@Override
+			public void handle(ScrollEvent event) {
+				double zoomFactor = 1.5;
+				if (event.getDeltaY() <= 0) {
+					// zoom out
+					zoomFactor = 1 / zoomFactor;
+				}
+				zoomOperator.zoom(scrollPane, zoomFactor, event.getSceneX(), event.getSceneY());
+			}
+		});
 	}
 
 	private void initilizeToggleButton() {

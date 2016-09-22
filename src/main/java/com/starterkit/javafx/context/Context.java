@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Context {
 	private final static Context instance = new Context();
+	
 	private ArrayList<File> listOfPictures;
 	private String currentPicturePath;
 

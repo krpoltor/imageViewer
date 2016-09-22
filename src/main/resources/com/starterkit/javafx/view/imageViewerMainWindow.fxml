@@ -15,7 +15,9 @@
 			prefHeight="60.0" prefWidth="146.0" text="%button.open"
 			AnchorPane.bottomAnchor="525.0" AnchorPane.leftAnchor="14.0"
 			AnchorPane.rightAnchor="640.0" AnchorPane.topAnchor="15.0" />
-		<ScrollPane layoutX="14.0" layoutY="81.0">
+		<ScrollPane layoutX="14.0" layoutY="81.0" pannable="true"
+			AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="14.0"
+			AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="81.0">
 			<content>
 				<TilePane fx:id="mainWindowTilePane" prefHeight="509.0"
 					prefWidth="771.0" />

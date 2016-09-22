@@ -37,7 +37,6 @@ import javafx.stage.Stage;
  * specific points in time.
  * </p>
  *
- * @author Leszek
  */
 public class MainWindowController {
 
@@ -61,32 +60,31 @@ public class MainWindowController {
 	@FXML
 	public void openButtonAction(ActionEvent event) {
 		LOG.debug("'Open' button clicked!");
-		if (model.getListOfPictures() != null) {
-			model.clearListOfPictures();
-		}
-		Runnable backgroundTask = new Runnable() {
+		clearModelAndImageWindow();
+		Runnable backgroundTask = openDirectoryTask(event);
+		new Thread(backgroundTask).start();
+	}
 
+	private Runnable openDirectoryTask(ActionEvent event) {
+		Runnable backgroundTask = new Runnable() {
 			/**
 			 * This method will be executed in a background thread.
 			 */
 			@Override
 			public void run() {
 				LOG.debug("backgroundTask.run() called");
-	
 				/*
-				 * Ask for permission.
+				 * Choose directory.
 				 */
 				JFileChooser chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
 				chooser.setDialogTitle("Specify folder");
 				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(false);
-
 				/*
 				 * Add an event(runnable) to the event queue.
 				 */
 				Platform.runLater(new Runnable() {
-
 					/**
 					 * This method will be executed in the JavaFX Application
 					 * Thread.
@@ -109,7 +107,6 @@ public class MainWindowController {
 								imageView = createImageView(file, event);
 								mainWindowTilePane.getChildren().addAll(imageView);
 							}
-
 						} else {
 							LOG.debug("No Selection ");
 						}
@@ -118,7 +115,16 @@ public class MainWindowController {
 				});
 			}
 		};
-		new Thread(backgroundTask).start();
+		return backgroundTask;
+	}
+
+	private void clearModelAndImageWindow() {
+		if (model.getListOfPictures() != null) {
+			model.clearListOfPictures();
+		}
+		if (!mainWindowTilePane.getChildren().isEmpty()) {
+			mainWindowTilePane.getChildren().clear();
+		}
 	};
 
 	private ImageView createImageView(final File imageFile, ActionEvent actionEvent) {

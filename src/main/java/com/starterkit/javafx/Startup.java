@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 /**
  * Application entry point.
  *
- * @author Leszek
  */
 public class Startup extends Application {
 

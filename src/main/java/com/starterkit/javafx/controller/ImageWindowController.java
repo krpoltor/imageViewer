@@ -13,10 +13,6 @@ import com.starterkit.javafx.context.Context;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -30,8 +26,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
 
@@ -58,13 +52,21 @@ public class ImageWindowController {
 	@FXML
 	private ScrollPane scrollPane;
 
+	private int interval = 1000;
+
+	public int getInterval() {
+		return interval;
+	}
+
+	public void setInterval(int interval) {
+		this.interval = interval;
+	}
+
 	AnimatedZoomOperator zoomOperator = new AnimatedZoomOperator();
 
 	private Context model = Context.getInstance();
 
 	private Integer position = new Integer(0);
-
-	final DoubleProperty zoomProperty = new SimpleDoubleProperty(200);
 
 	private ArrayList<File> listOfPictures = model.getListOfPictures();
 
@@ -80,50 +82,35 @@ public class ImageWindowController {
 	private void initialize() {
 		LOG.debug("initialize(): " + this.getClass().getName());
 
+		initializePosition();
+		initilizeToggleButton();
+		initializeZoom();
+
+		initializeLabels();
+		showImage();
+	}
+
+	private void initializeLabels() {
+		LOG.debug("Entering initializeLabels()");
+		picturesQuantityLabel.setText(String.valueOf(getListOfPictures().size()));
+		Integer pos = position + 1;
+		currentPositionLabel.setText(pos.toString());
+		LOG.debug("Exiting initializeLabels()");
+	}
+
+	private void initializePosition() {
+		LOG.debug("Entering initializePosition()");
 		for (int i = 0; i < listOfPictures.size(); i++) {
 			if (listOfPictures.get(i).getAbsolutePath().equals(model.getCurrentPicturePath())) {
 				position = i;
 			}
 		}
-		initilizeToggleButton();
-		initializeZoom();
-
-		picturesQuantityLabel.setText(String.valueOf(getListOfPictures().size()));
-		Integer pos = position + 1;
-		currentPositionLabel.setText(pos.toString());
-		showImage();
+		LOG.debug("Exiting initializePosition()");
 	}
 
 	private void initializeZoom() {
-		// zoomProperty.addListener(new InvalidationListener() {
-		// @Override
-		// public void invalidated(Observable arg0) {
-		// mainImageView.setFitWidth(zoomProperty.get() * 4);
-		// mainImageView.setFitHeight(zoomProperty.get() * 3);
-		// }
-		// });
-		//
-		// scrollPane.addEventFilter(ScrollEvent.ANY, new
-		// EventHandler<ScrollEvent>() {
-		// @Override
-		// public void handle(ScrollEvent event) {
-		// if (event.getDeltaY() > 0) {
-		// zoomProperty.set(zoomProperty.get() * 1.1);
-		// } else if (event.getDeltaY() < 0) {
-		// zoomProperty.set(zoomProperty.get() / 1.1);
-		// }
-		// }
-		// });
-		//
-		// mainImageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
-		// @Override
-		// public void handle(KeyEvent ke) {
-		// if (ke.getCode().equals(KeyCode.RIGHT)) {
-		// mainImageView.setX(4);
-		// }
-		// }
-		// });
-		scrollPane.setOnScroll(new EventHandler<ScrollEvent>() {
+		LOG.debug("Entering initializeZoom()");
+		mainImageView.setOnScroll(new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {
 				double zoomFactor = 1.5;
@@ -131,13 +118,15 @@ public class ImageWindowController {
 					// zoom out
 					zoomFactor = 1 / zoomFactor;
 				}
-				zoomOperator.zoom(scrollPane, zoomFactor, event.getSceneX(), event.getSceneY());
+				zoomOperator.zoom(mainImageView, zoomFactor, event.getSceneX(), event.getSceneY());
 			}
 		});
+		LOG.debug("Exiting initializeZoom()");
 	}
 
 	private void initilizeToggleButton() {
-		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2500), ae -> slideshow()));
+		LOG.debug("Entering initilizeToggleButton()");
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(getInterval()), ae -> slideshow()));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		ToggleGroup group = new ToggleGroup();
 
@@ -153,13 +142,17 @@ public class ImageWindowController {
 				;
 			}
 		});
+		LOG.debug("Exiting initilizeToggleButton()");
 	}
 
 	private void slideshow() {
+		LOG.debug("Entering slideshow()");
 		nextButtonAction();
+		LOG.debug("Exiting slideshow()");
 	}
 
 	private void showImage() {
+		LOG.debug("Entering showImage()");
 
 		ArrayList<File> file = getListOfPictures();
 
@@ -170,10 +163,12 @@ public class ImageWindowController {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		LOG.debug("Exiting showImage()");
 	}
 
 	@FXML
 	public void previousButtonAction() {
+		LOG.debug("Entering previousButtonAction()");
 		if (position - 1 < 0) {
 			position = listOfPictures.size() - 1;
 		} else {
@@ -181,10 +176,12 @@ public class ImageWindowController {
 		}
 		currentPositionLabel.setText(Integer.toString(position + 1));
 		showImage();
+		LOG.debug("Exiting previousButtonAction()");
 	}
 
 	@FXML
 	public void nextButtonAction() {
+		LOG.debug("Entering nextButtonAction()");
 		if (position + 1 > listOfPictures.size() - 1) {
 			position = 0;
 		} else {
@@ -192,6 +189,7 @@ public class ImageWindowController {
 		}
 		currentPositionLabel.setText(Integer.toString(position + 1));
 		showImage();
+		LOG.debug("Exiting nextButtonAction()");
 	}
 
 	@FXML
@@ -206,6 +204,27 @@ public class ImageWindowController {
 			System.out.println(e);
 		}
 		LOG.debug("Leaving 'Edit' button action.");
+	}
+
+	@FXML
+	public void set1SecInterval() {
+		setInterval(1000);
+		initilizeToggleButton();
+		LOG.debug("Set interval: "+ getInterval());
+	}
+
+	@FXML
+	public void set2SecInterval() {
+		setInterval(2000);
+		initilizeToggleButton();
+		LOG.debug("Set interval: "+ getInterval());
+	}
+
+	@FXML
+	public void set5SecInterval() {
+		setInterval(5000);
+		initilizeToggleButton();
+		LOG.debug("Set interval: "+ getInterval());
 	}
 
 }
